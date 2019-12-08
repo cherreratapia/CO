@@ -78,10 +78,13 @@ export default class CarInsurance {
 
     simulatePrice = (days: number) => {
         let productUpdated: Product[] = [...this.product];
+        console.log(`----------------- DÍA 0 -----------------`);
+        this.product.map(this.productPrinter);
+        console.log(`\n`);
         for (let index = 1; index <= days; index++) {
             console.log(`----------------- DÍA ${index} -----------------`);
             productUpdated = this.updatePrice();
-            console.log('-----------------------------------');
+            console.log(`\n`);
         }
         return productUpdated;
     };
