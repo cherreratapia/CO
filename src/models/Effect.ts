@@ -1,10 +1,10 @@
 export default class Effect {
-  field: string;
-  operation: string;
-  operator: number;
-  constructor(field: string, operation: string, operator: number) {
-    this.field = field;
-    this.operation = operation;
-    this.operator = operator;
-  }
+    field: string;
+    symbol: string;
+    operation: number;
+    constructor(field: string, symbol: string, operation: number) {
+        this.field = field;
+        this.symbol = symbol;
+        this.operation = operation;
+    }
 }
