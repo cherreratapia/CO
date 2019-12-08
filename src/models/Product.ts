@@ -1,3 +1,5 @@
+import { Field } from './Rule';
+
 export default class Product {
     name: string;
     price: number;

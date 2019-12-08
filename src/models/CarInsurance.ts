@@ -45,33 +45,17 @@ export default class CarInsurance {
             );
             if (rulesToApply.length > 0) {
                 rulesToApply.map((rule: Rule) => {
-                    if (rule.fieldToCompare.toUpperCase() === 'PRICE') {
-                        const canApplyRule = this.executeRule(rule, price, rule.target);
-                        if (canApplyRule) {
-                            if (rule.effect.field.toUpperCase() === 'PRICE') {
-                                price = this.operations[rule.effect.symbol](price, rule.effect.operation);
-                            }
-                            if (rule.effect.field.toUpperCase() === 'SELLIN') {
-                                sellIn = this.operations[rule.effect.symbol](sellIn, rule.effect.operation);
-                            }
-                        }
-                    }
-                    if (rule.fieldToCompare.toUpperCase() === 'SELLIN') {
-                        const canApplyRule = this.executeRule(rule, sellIn, rule.target);
-                        if (canApplyRule) {
-                            if (rule.effect.field.toUpperCase() === 'PRICE') {
-                                price = this.operations[rule.effect.symbol](price, rule.effect.operation);
-                            }
-                            if (rule.effect.field.toUpperCase() === 'SELLIN') {
-                                sellIn = this.operations[rule.effect.symbol](sellIn, rule.effect.operation);
-                            }
-                        }
+                    const canApplyRule = this.executeRule(rule, product[rule.fieldToCompare], rule.target);
+                    if (canApplyRule) {
+                        product[rule.effect.field] = this.operations[rule.effect.symbol](
+                            product[rule.effect.field],
+                            rule.effect.operation,
+                        );
                     }
                 });
             }
-            const newProduct = new Product(product.name, sellIn, price);
-            this.productPrinter(newProduct);
-            return newProduct;
+            this.productPrinter(product);
+            return product;
         });
         return this.product;
     };
