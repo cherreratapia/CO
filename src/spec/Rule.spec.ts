@@ -1,4 +1,5 @@
-import Effect from "src/models/Effect";
+import Effect from "../models/Effect";
+import Rule from "../models/Rule";
 
 describe("Rule clas", () => {
   it("Should create a rule with his effect associated", () => {

@@ -1,5 +1,7 @@
 import Product from "../models/Product";
 import CarInsurance from "../models/CarInsurance";
+import Effect from "../models/Effect";
+import Rule from "../models/Rule";
 
 describe("CarInsurance object", () => {
   it("Should create an Array of objects. Then create an insurance Product", () => {
@@ -11,12 +13,12 @@ describe("CarInsurance object", () => {
       new Product("Super Sale", 15, 10)
     ];
 
-    const effectSellInMinusOne = new Effect("sellIn", "-", "1");
-    const effectPriceMinusOne = new Effect("Price", "-", "1");
-    const effectPriceAddOne = new Effect("Price", "+", "1");
-    const effectPriceAddTwo = new Effect("Price", "+", "2");
-    const effectPriceAddThree = new Effect("Price", "+", "3");
-    const effectPriceMinusTwo = new Effect("Price", "-", "2");
+    const effectSellInMinusOne = new Effect("sellIn", "-", 1);
+    const effectPriceMinusOne = new Effect("Price", "-", 1);
+    const effectPriceAddOne = new Effect("Price", "+", 1);
+    const effectPriceAddTwo = new Effect("Price", "+", 2);
+    const effectPriceAddThree = new Effect("Price", "+", 3);
+    const effectPriceMinusTwo = new Effect("Price", "-", 2);
     const effectPriceToZero = new Effect("Price", "=", 0);
 
     const rules: Rule[] = [
@@ -63,6 +65,6 @@ describe("CarInsurance object", () => {
       new Rule("Super Sale", "daily", "sellIn", 0, effectPriceMinusTwo)
     ];
     const carInsurance = new CarInsurance(products, rules);
-    expect(carInsurance.product.length).toBe(3);
+    expect(carInsurance.product.length).toBe(5);
   });
 });
