@@ -12,6 +12,7 @@ describe('CarInsurance object', () => {
     const effectPriceMinusTwo = new Effect('Price', '-', 2);
     const effectPriceMinusFour = new Effect('Price', '-', 2);
     const effectPriceToZero = new Effect('Price', '=', 0);
+    const effectPriceToFifty = new Effect('Price', '=', 50);
     const rules: Rule[] = [
         new Rule('Medium Coverage', 'daily', 'sellIn', 0, effectSellInMinusOne),
         new Rule('Medium Coverage', 'greaterThan', 'price', 0, effectPriceMinusOne),
@@ -21,11 +22,13 @@ describe('CarInsurance object', () => {
         new Rule('Low Coverage', 'equal', 'price', 0, effectPriceToZero),
         new Rule('Full Coverage', 'daily', 'sellIn', 0, effectSellInMinusOne),
         new Rule('Full Coverage', 'greaterThan', 'sellIn', 0, effectPriceAddOne),
+        new Rule('Full Coverage', 'lessThanOrEqual', 'sellIn', 0, effectPriceAddTwo),
+        new Rule('Full Coverage', 'greaterThan', 'price', 50, effectPriceToFifty),
         new Rule('Special Full Coverage', 'daily', 'sellIn', 0, effectSellInMinusOne),
         new Rule('Special Full Coverage', 'greaterThan', 'sellIn', 10, effectPriceMinusOne),
         new Rule('Special Full Coverage', 'lessThanOrEqual', 'sellIn', 10, effectPriceAddTwo),
         new Rule('Special Full Coverage', 'lessThanOrEqual', 'sellIn', 5, effectPriceAddThree),
-        new Rule('Special Full Coverage', 'equal', 'sellIn', 0, effectPriceToZero),
+        new Rule('Special Full Coverage', 'lessThanOrEqual', 'sellIn', 0, effectPriceToZero),
         new Rule('Super Sale', 'daily', 'sellIn', 0, effectSellInMinusOne),
         new Rule('Super Sale', 'greaterThan', 'sellIn', 0, effectPriceMinusTwo),
         new Rule('Super Sale', 'equal', 'sellIn', 0, effectPriceMinusFour),
@@ -59,8 +62,9 @@ describe('CarInsurance object', () => {
             new Product('Special Full Coverage', 5, 49),
             new Product('Super Sale', 3, 6),
         ];
+        // const products = [new Product('Full Coverage', 2, 0)];
         const carInsurance = new CarInsurance(products, rules);
-        const productSimulated: Product[] = carInsurance.simulatePrice();
+        const productSimulated: Product[] = carInsurance.simulatePrice(30);
         expect(productSimulated[0].sellIn).toBe(-20);
         expect(productSimulated[0].price).toBe(0);
         expect(productSimulated[1].sellIn).toBe(-28);
@@ -79,7 +83,6 @@ describe('CarInsurance object', () => {
         expect(productSimulated[7].price).toBe(0);
         expect(productSimulated[8].sellIn).toBe(-27);
         expect(productSimulated[8].price).toBe(0);
-        productSimulated.map(carInsurance.productPrinter);
     });
     it('Should calculate the 1 day simulation', () => {
         const products = [
@@ -99,7 +102,7 @@ describe('CarInsurance object', () => {
         expect(productSimulated[0].price).toBe(19);
         expect(productSimulated[1].sellIn).toBe(1);
         expect(productSimulated[1].price).toBe(1);
-        expect(productSimulated[2].sellIn).toBe(5);
+        expect(productSimulated[2].sellIn).toBe(4);
         expect(productSimulated[2].price).toBe(6);
         expect(productSimulated[3].sellIn).toBe(0);
         expect(productSimulated[3].price).toBe(80);
@@ -110,7 +113,7 @@ describe('CarInsurance object', () => {
         expect(productSimulated[6].sellIn).toBe(9);
         expect(productSimulated[6].price).toBe(51);
         expect(productSimulated[7].sellIn).toBe(4);
-        expect(productSimulated[7].price).toBe(52);
+        expect(productSimulated[7].price).toBe(54);
         expect(productSimulated[8].sellIn).toBe(2);
         expect(productSimulated[8].price).toBe(4);
         productSimulated.map(carInsurance.productPrinter);

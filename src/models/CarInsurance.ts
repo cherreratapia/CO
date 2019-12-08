@@ -40,8 +40,8 @@ export default class CarInsurance {
         console.log(`${product.name}, ${product.sellIn}, ${product.price}`);
     };
 
-    updatePrice() {
-        return this.product.map((product: Product) => {
+    updatePrice = () => {
+        this.product = this.product.map((product: Product) => {
             let { price, sellIn } = product;
             const rulesToApply = this.rule.filter(
                 (rule: Rule) => product.name.toUpperCase() === rule.name.toUpperCase(),
@@ -51,18 +51,41 @@ export default class CarInsurance {
                     if (rule.fieldToCompare.toUpperCase() === 'PRICE') {
                         const canApplyRule = this.executeRule(rule, price, rule.target);
                         if (canApplyRule) {
-                            price = this.operations[rule.effect.symbol](price, rule.effect.operation);
+                            if (rule.effect.field.toUpperCase() === 'PRICE') {
+                                price = this.operations[rule.effect.symbol](price, rule.effect.operation);
+                            }
+                            if (rule.effect.field.toUpperCase() === 'SELLIN') {
+                                sellIn = this.operations[rule.effect.symbol](sellIn, rule.effect.operation);
+                            }
                         }
                     }
                     if (rule.fieldToCompare.toUpperCase() === 'SELLIN') {
                         const canApplyRule = this.executeRule(rule, sellIn, rule.target);
                         if (canApplyRule) {
-                            sellIn = this.operations[rule.effect.symbol](price, rule.effect.operation);
+                            if (rule.effect.field.toUpperCase() === 'PRICE') {
+                                price = this.operations[rule.effect.symbol](price, rule.effect.operation);
+                            }
+                            if (rule.effect.field.toUpperCase() === 'SELLIN') {
+                                sellIn = this.operations[rule.effect.symbol](sellIn, rule.effect.operation);
+                            }
                         }
                     }
                 });
             }
-            return new Product(product.name, sellIn, price);
+            const newProduct = new Product(product.name, sellIn, price);
+            this.productPrinter(newProduct);
+            return newProduct;
         });
-    }
+        return this.product;
+    };
+
+    simulatePrice = (days: number) => {
+        let productUpdated: Product[] = [...this.product];
+        for (let index = 1; index <= days; index++) {
+            console.log(`----------------- DÍA ${index} -----------------`);
+            productUpdated = this.updatePrice();
+            console.log('-----------------------------------');
+        }
+        return productUpdated;
+    };
 }
