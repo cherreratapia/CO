@@ -5,11 +5,15 @@ import Rule from '../models/Rule';
 
 describe('CarInsurance object', () => {
     const products = [
-        new Product('Medium Coverage', 10, 10),
-        new Product('Full Coverage', 10, 10),
-        new Product('Mega Coverage', 1, 180),
-        new Product('Special Full Coverage', 15, 10),
-        new Product('Super Sale', 15, 10),
+        new Product('Medium Coverage', 10, 20),
+        new Product('Full Coverage', 2, 0),
+        new Product('Low Coverage', 5, 7),
+        new Product('Mega Coverage', 0, 80),
+        new Product('Mega Coverage', -1, 80),
+        new Product('Special Full Coverage', 15, 20),
+        new Product('Special Full Coverage', 10, 49),
+        new Product('Special Full Coverage', 5, 49),
+        new Product('Super Sale', 3, 6),
     ];
 
     const effectSellInMinusOne = new Effect('sellIn', '-', 1);
@@ -18,24 +22,51 @@ describe('CarInsurance object', () => {
     const effectPriceAddTwo = new Effect('Price', '+', 2);
     const effectPriceAddThree = new Effect('Price', '+', 3);
     const effectPriceMinusTwo = new Effect('Price', '-', 2);
+    const effectPriceMinusFour = new Effect('Price', '-', 2);
     const effectPriceToZero = new Effect('Price', '=', 0);
 
     const rules: Rule[] = [
         new Rule('Medium Coverage', 'daily', 'sellIn', 0, effectSellInMinusOne),
-        new Rule('Medium Coverage', 'daily', 'sellIn', 0, effectPriceMinusOne),
+        new Rule('Medium Coverage', 'greaterThan', 'sellIn', 0, effectPriceMinusOne),
+        new Rule('Medium Coverage', 'equal', 'sellIn', 0, effectPriceMinusTwo),
+        new Rule('Low Coverage', 'daily', 'sellIn', 0, effectSellInMinusOne),
+        new Rule('Low Coverage', 'greaterThan', 'sellIn', 0, effectPriceMinusOne),
+        new Rule('Low Coverage', 'equal', 'sellIn', 0, effectPriceMinusTwo),
         new Rule('Full Coverage', 'daily', 'sellIn', 0, effectSellInMinusOne),
-        new Rule('Full Coverage', 'daily', 'sellIn', 0, effectPriceAddOne),
-        new Rule('Special Full Coverage', 'greaterThan', 'sellIn', 10, effectPriceMinusOne),
+        new Rule('Full Coverage', 'greaterThan', 'sellIn', 0, effectPriceAddOne),
         new Rule('Special Full Coverage', 'daily', 'sellIn', 0, effectSellInMinusOne),
+        new Rule('Special Full Coverage', 'greaterThan', 'sellIn', 10, effectPriceMinusOne),
         new Rule('Special Full Coverage', 'lessThanOrEqual', 'sellIn', 10, effectPriceAddTwo),
         new Rule('Special Full Coverage', 'lessThanOrEqual', 'sellIn', 5, effectPriceAddThree),
         new Rule('Special Full Coverage', 'equal', 'sellIn', 0, effectPriceToZero),
         new Rule('Super Sale', 'daily', 'sellIn', 0, effectSellInMinusOne),
-        new Rule('Super Sale', 'daily', 'sellIn', 0, effectPriceMinusTwo),
+        new Rule('Super Sale', 'greaterThan', 'sellIn', 0, effectPriceMinusTwo),
+        new Rule('Super Sale', 'equal', 'sellIn', 0, effectPriceMinusFour),
     ];
     const carInsurance = new CarInsurance(products, rules);
     it('Should create an Array of objects. Then create an insurance Product', () => {
-        expect(carInsurance.product.length).toBe(5);
+        expect(carInsurance.product.length).toBe(9);
     });
-    it('Should calculate the simulation of products at 30 days', () => {});
+    it('Should calculate the simulation of products at 30 days', () => {
+        const productSimulated = carInsurance.updatePrice();
+        expect(productSimulated[0].sellIn).toBe(-20);
+        expect(productSimulated[0].price).toBe(0);
+        expect(productSimulated[1].sellIn).toBe(-28);
+        expect(productSimulated[1].price).toBe(50);
+        expect(productSimulated[2].sellIn).toBe(-25);
+        expect(productSimulated[2].price).toBe(0);
+        expect(productSimulated[3].sellIn).toBe(0);
+        expect(productSimulated[3].price).toBe(80);
+        expect(productSimulated[4].sellIn).toBe(-1);
+        expect(productSimulated[4].price).toBe(80);
+        expect(productSimulated[5].sellIn).toBe(-15);
+        expect(productSimulated[5].price).toBe(0);
+        expect(productSimulated[6].sellIn).toBe(-20);
+        expect(productSimulated[6].price).toBe(0);
+        expect(productSimulated[7].sellIn).toBe(-25);
+        expect(productSimulated[7].price).toBe(0);
+        expect(productSimulated[8].sellIn).toBe(-27);
+        expect(productSimulated[8].price).toBe(0);
+        productSimulated.forEach(productPrinter);
+    });
 });
