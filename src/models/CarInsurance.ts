@@ -31,9 +31,6 @@ export default class CarInsurance {
         this.product = product;
         this.rule = rule;
     }
-    isNumber = (field: any) => {
-        return !isNaN(parseFloat(field)) && isFinite(field);
-    };
     executeRule = (rule: Rule, origin: number, target: number) => this.COMPARATORS[rule.comparator](origin, target);
 
     productPrinter = (product: Product) => {
